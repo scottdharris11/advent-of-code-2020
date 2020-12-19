@@ -17,6 +17,15 @@ public class InputReader {
         return ints;
     }
 
+    public List<Long> readLongInput( String file ) {
+        List<String> strings = readStringInput( file );
+        List<Long> longs = new ArrayList<>( strings.size() );
+        for ( String s : strings ) {
+            longs.add( Long.parseLong( s ) );
+        }
+        return longs;
+    }
+
     public List<String> readStringInput( String file ) {
         List<String> input = new ArrayList<>();
 
