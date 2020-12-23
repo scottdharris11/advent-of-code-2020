@@ -1,8 +1,8 @@
 package com.harris;
 
 public class Main {
-    public static void main(String[] args) {
-	    new AdventDay1().executePart1();
+    public static void main(String[] args) throws Exception {
+	    /*new AdventDay1().executePart1();
         new AdventDay1().executePart2();
         new AdventDay2().executePart1();
         new AdventDay2().executePart2();
@@ -33,6 +33,8 @@ public class Main {
         new AdventDay15().executePart1();
         new AdventDay15().executePart2();
         new AdventDay16().executePart1();
-        new AdventDay16().executePart2();
+        new AdventDay16().executePart2();*/
+        new AdventDay17().executePart1();
+        new AdventDay17().executePart2();
     }
 }

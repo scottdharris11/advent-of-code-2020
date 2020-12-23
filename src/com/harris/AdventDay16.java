@@ -1,9 +1,7 @@
 package com.harris;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AdventDay16 {
 
@@ -23,7 +21,7 @@ public class AdventDay16 {
             "55,2,20",
             "38,6,12"
         );*/
-        List<String> lines = new InputReader().readStringInput("day16-input.txt" );
+        List<String> lines = new InputReader().readStringInput("data-files/day16-input.txt" );
 
         List<Field> fields = new ArrayList<>();
         int ticketBegin = readFields( fields, lines );
