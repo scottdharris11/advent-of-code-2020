@@ -9,7 +9,7 @@ public class AdventDay8 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 8 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day8-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day8-input.txt" );
         List<BootCommand> commands = parseCommands( lines );
         int value = executeCommands( commands, false );
         System.out.println( "  Value at loop start: " + value );
@@ -17,7 +17,7 @@ public class AdventDay8 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 8 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day8-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day8-input.txt" );
         List<BootCommand> commands = parseCommands( lines );
         int cmdIdx = 0;
         int fixValue = -1;

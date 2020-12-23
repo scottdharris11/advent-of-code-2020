@@ -9,7 +9,7 @@ public class AdventDay11 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 11 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day11-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day11-input.txt" );
         char[][] seatingChart = buildSeatingChart( lines );
 
         int seatsOccupied = 0;
@@ -45,7 +45,7 @@ public class AdventDay11 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 11 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day11-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day11-input.txt" );
         char[][] seatingChart = buildSeatingChart( lines );
 
         int seatsOccupied = 0;

@@ -7,7 +7,7 @@ public class AdventDay10 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 10 - PART 1..." );
-        List<Integer> numbers = new InputReader().readIntInput( "day10-input.txt" );
+        List<Integer> numbers = new InputReader().readIntInput( "data-files/day10-input.txt" );
         Collections.sort( numbers );
         int joltDiff1 = 0;
         int joltDiff3 = 0;
@@ -29,7 +29,7 @@ public class AdventDay10 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 10 - PART 2..." );
-        List<Integer> numbers = new InputReader().readIntInput( "day10-input.txt" );
+        List<Integer> numbers = new InputReader().readIntInput( "data-files/day10-input.txt" );
         numbers.add( 0 );
         Collections.sort( numbers );
         Integer[] adapters = numbers.toArray(new Integer[0]);

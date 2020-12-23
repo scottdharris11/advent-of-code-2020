@@ -7,7 +7,7 @@ public class AdventDay12 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 12 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day12-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day12-input.txt" );
         //List<String> lines = Arrays.asList( "F10", "N3", "F7", "R90", "F11" );
         List<ShipCommand> commands = parseCommands( lines );
         ShipPosition position = new ShipPosition();
@@ -20,7 +20,7 @@ public class AdventDay12 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 12 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day12-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day12-input.txt" );
         //List<String> lines = Arrays.asList( "F10", "N3", "F7", "R90", "F11" );
         List<ShipCommand> commands = parseCommands( lines );
         ShipPosition2 position = new ShipPosition2();

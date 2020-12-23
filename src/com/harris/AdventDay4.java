@@ -9,7 +9,7 @@ public class AdventDay4 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 4 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day4-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day4-input.txt" );
         List<Map<String,String>> passports = parsePassports( lines );
 
         String[] reqFields = { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };
@@ -33,7 +33,7 @@ public class AdventDay4 {
         // ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
         // pid (Passport ID) - a nine-digit number, including leading zeroes.
         System.out.println( "ADVENT DAY 4 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day4-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day4-input.txt" );
         List<Map<String,String>> passports = parsePassports( lines );
 
         String[] reqFields = { "byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid" };

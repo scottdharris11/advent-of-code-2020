@@ -7,7 +7,7 @@ public class AdventDay2 {
     public void executePart1() {
         System.out.println( "ADVENT DAY 2 - PART 1..." );
         int pwdValidCnt = 0;
-        List<String> inputData = new InputReader().readStringInput( "day2-input.txt" );
+        List<String> inputData = new InputReader().readStringInput( "data-files/day2-input.txt" );
         for ( String input : inputData ) {
             PasswordRule rule = parseRule( input );
             int occurCnt = countCharOccursInString( rule.pwd, rule.ruleChar );
@@ -21,7 +21,7 @@ public class AdventDay2 {
     public void executePart2() {
         System.out.println( "ADVENT DAY 2 - PART 2..." );
         int pwdValidCnt = 0;
-        List<String> inputData = new InputReader().readStringInput( "day2-input.txt" );
+        List<String> inputData = new InputReader().readStringInput( "data-files/day2-input.txt" );
         for ( String input : inputData ) {
             PasswordRule rule = parseRule( input );
             int occurCnt = 0;

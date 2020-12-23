@@ -7,7 +7,7 @@ public class AdventDay1 {
     public void executePart1() {
         System.out.println( "ADVENT DAY 1 - PART 1..." );
         int num1 = 0, num2 = 0;
-        List<Integer> input = new InputReader().readIntInput( "day1-input.txt" );
+        List<Integer> input = new InputReader().readIntInput( "data-files/day1-input.txt" );
         done:
         for ( int i : input ) {
             for ( int j : input ) {
@@ -25,7 +25,7 @@ public class AdventDay1 {
     public void executePart2() {
         System.out.println( "ADVENT DAY 1 - PART 2..." );
         int num1 = 0, num2 = 0, num3 = 0;
-        List<Integer> input = new InputReader().readIntInput( "day1-input.txt" );
+        List<Integer> input = new InputReader().readIntInput( "data-files/day1-input.txt" );
         done:
         for ( int i : input ) {
             for ( int j : input ) {

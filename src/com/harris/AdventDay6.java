@@ -6,7 +6,7 @@ public class AdventDay6 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 6 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day6-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day6-input.txt" );
         List<List<String>> groups = buildGroups( lines );
         List<Set<Character>> groupYesAnswers = new ArrayList<>();
         for ( List<String> group : groups ) {
@@ -28,7 +28,7 @@ public class AdventDay6 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 6 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day6-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day6-input.txt" );
         List<List<String>> groups = buildGroups( lines );
         List<Set<Character>> groupYesAnswers = new ArrayList<>();
         for ( List<String> group : groups ) {

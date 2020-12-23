@@ -75,7 +75,7 @@ public class AdventDay16 {
             "15,1,5",
             "5,14,9"
         );*/
-        List<String> lines = new InputReader().readStringInput("day16-input.txt" );
+        List<String> lines = new InputReader().readStringInput("data-files/day16-input.txt" );
 
         List<Field> fields = new ArrayList<>();
         int ticketBegin = readFields( fields, lines );

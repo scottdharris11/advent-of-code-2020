@@ -6,14 +6,14 @@ public class AdventDay3 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 3 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day3-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day3-input.txt" );
         int treeCnt = countTrees( lines, 3, 1 );
         System.out.println("  Trees encountered: " + treeCnt );
     }
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 3 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day3-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day3-input.txt" );
         int treeCnt1 = countTrees( lines, 1, 1 );
         int treeCnt2 = countTrees( lines, 3, 1 );
         int treeCnt3 = countTrees( lines, 5, 1 );

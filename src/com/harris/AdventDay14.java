@@ -14,7 +14,7 @@ public class AdventDay14 {
         //        "mem[8] = 11",
         //        "mem[7] = 101",
         //        "mem[8] = 0" );
-        List<String> lines = new InputReader().readStringInput("day14-input.txt" );
+        List<String> lines = new InputReader().readStringInput("data-files/day14-input.txt" );
 
         Map<Long,Long> memory = new HashMap<>();
         String currMask = "";
@@ -41,7 +41,7 @@ public class AdventDay14 {
         //        "mem[42] = 100",
         //        "mask = 00000000000000000000000000000000X0XX",
         //        "mem[26] = 1" );
-        List<String> lines = new InputReader().readStringInput("day14-input.txt" );
+        List<String> lines = new InputReader().readStringInput("data-files/day14-input.txt" );
 
         Map<Long,Long> memory = new HashMap<>();
         String currMask = "";

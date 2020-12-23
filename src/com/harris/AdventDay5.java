@@ -8,7 +8,7 @@ public class AdventDay5 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 5 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day5-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day5-input.txt" );
         int highSeatId = 0;
         for ( String line : lines ) {
             int seatId = convertToSeatId( line );
@@ -21,7 +21,7 @@ public class AdventDay5 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 5 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day5-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day5-input.txt" );
         List<Integer> takenIds = new ArrayList<>();
         for ( String line : lines ) {
             takenIds.add( convertToSeatId( line ) );

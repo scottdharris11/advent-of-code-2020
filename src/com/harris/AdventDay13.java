@@ -10,7 +10,7 @@ public class AdventDay13 {
     public void executePart1() {
         System.out.println( "ADVENT DAY 13 - PART 1..." );
         //List<String> lines = Arrays.asList( "939", "7,13,x,x,59,x,31,19" );
-        List<String> lines = new InputReader().readStringInput( "day13-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day13-input.txt" );
 
         long possibleDeparture = Long.parseLong( lines.get(0) );
         List<Bus> buses = Arrays.stream( lines.get(1).split( "," ) ).filter( x -> ! x.equals( "x" ) ).map( x -> {
@@ -41,7 +41,7 @@ public class AdventDay13 {
         //List<String> lines = Arrays.asList( "939", "67,x,7,59,61" );
         //List<String> lines = Arrays.asList( "939", "67,7,x,59,61" );
         //List<String> lines = Arrays.asList( "939", "1789,37,47,1889" );
-        List<String> lines = new InputReader().readStringInput( "day13-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day13-input.txt" );
 
         List<Bus> buses = new ArrayList<>();
         int offset = 0;

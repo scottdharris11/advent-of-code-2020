@@ -6,14 +6,14 @@ public class AdventDay9 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 9 - PART 1..." );
-        List<Long> numbers = new InputReader().readLongInput( "day9-input.txt" );
+        List<Long> numbers = new InputReader().readLongInput( "data-files/day9-input.txt" );
         long workValue = findFirstMisMatch( numbers );
         System.out.println( "  First non-matching value: " + workValue );
     }
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 9 - PART 2..." );
-        List<Long> numbers = new InputReader().readLongInput( "day9-input.txt" );
+        List<Long> numbers = new InputReader().readLongInput( "data-files/day9-input.txt" );
         int numberCnt = numbers.size();
         long workValue = findFirstMisMatch( numbers );
 

@@ -8,7 +8,7 @@ public class AdventDay7 {
 
     public void executePart1() {
         System.out.println( "ADVENT DAY 7 - PART 1..." );
-        List<String> lines = new InputReader().readStringInput( "day7-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day7-input.txt" );
         Map<String,Bag> bags = parseBags( lines );
 
         int matches = 0;
@@ -24,7 +24,7 @@ public class AdventDay7 {
 
     public void executePart2() {
         System.out.println( "ADVENT DAY 7 - PART 2..." );
-        List<String> lines = new InputReader().readStringInput( "day7-input.txt" );
+        List<String> lines = new InputReader().readStringInput( "data-files/day7-input.txt" );
         Map<String,Bag> bags = parseBags( lines );
 
         int reqBags = countRequiredBags( bags.get( "shiny gold" ) );

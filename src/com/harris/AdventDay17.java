@@ -14,7 +14,7 @@ public class AdventDay17 {
             "..#",
             "###"
         );*/
-        List<String> lines = new InputReader().readStringInput("day17-input.txt");
+        List<String> lines = new InputReader().readStringInput("data-files/day17-input.txt");
 
         Matrix matrix = initializeMatrix( lines );
         matrix.suppressPrint = true;
@@ -27,12 +27,12 @@ public class AdventDay17 {
 
     public void executePart2() throws CloneNotSupportedException {
         System.out.println("ADVENT DAY 17 - PART 2...");
-        List<String> lines = java.util.Arrays.asList(
+        /*List<String> lines = java.util.Arrays.asList(
             ".#.",
             "..#",
             "###"
-        );
-        //List<String> lines = new InputReader().readStringInput("day17-input.txt");
+        );*/
+        List<String> lines = new InputReader().readStringInput("data-files/day17-input.txt");
 
         Matrix matrix = initializeMatrix( lines );
         matrix.suppressPrint = true;
@@ -96,7 +96,6 @@ public class AdventDay17 {
 
             matrix = updMatrix;
             matrix.print( "Matrix at cycle " + (i+1) );
-            System.out.println( "Active cubes: " + activeCubes );
         }
         return activeCubes;
     }
