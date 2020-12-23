@@ -1,7 +1,7 @@
 package com.harris;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 	    new AdventDay1().executePart1();
         new AdventDay1().executePart2();
         new AdventDay2().executePart1();
