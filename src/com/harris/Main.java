@@ -2,7 +2,7 @@ package com.harris;
 
 public class Main {
     public static void main(String[] args) {
-	    new AdventDay1().executePart1();
+	    /*new AdventDay1().executePart1();
         new AdventDay1().executePart2();
         new AdventDay2().executePart1();
         new AdventDay2().executePart2();
@@ -39,6 +39,7 @@ public class Main {
         new AdventDay18().executePart1();
         new AdventDay18().executePart2();
         new AdventDay19().executePart1();
-        new AdventDay19().executePart2();
+        new AdventDay19().executePart2();*/
+        new AdventDay20().executePart1();
     }
 }
