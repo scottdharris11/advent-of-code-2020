@@ -7,7 +7,7 @@ import java.util.*;
 public class AdventDay21 {
 
     public void executePart1() {
-        System.out.println("ADVENT DAY 20 - PART 1...");
+        System.out.println("ADVENT DAY 21 - PART 1...");
         /*List<String> lines = java.util.Arrays.asList(
                 "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)",
                 "trh fvjkl sbzzf mxmxvkd (contains dairy)",
