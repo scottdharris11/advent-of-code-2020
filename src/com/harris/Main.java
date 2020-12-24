@@ -39,10 +39,18 @@ public class Main {
         new AdventDay18().executePart1();
         new AdventDay18().executePart2();
         new AdventDay19().executePart1();
-        new AdventDay19().executePart2();
+        //new AdventDay19().executePart2();
         new AdventDay20().executePart1();
+        //new AdventDay20().executePart2();
         new AdventDay21().executePart1();
+        //new AdventDay21().executePart2();
         new AdventDay22().executePart1();
+        //new AdventDay22().executePart2();
         new AdventDay23().executePart1();
+        //new AdventDay23().executePart2();
+        new AdventDay24().executePart1();
+        //new AdventDay24().executePart2();
+        //new AdventDay25().executePart1();
+        //new AdventDay25().executePart2();
     }
 }

@@ -32,6 +32,33 @@ public class AdventDay23 {
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + sb.toString() );
     }
 
+    public void executePart2() {
+        System.out.println("ADVENT DAY 23 - PART 2...");
+        List<Integer> cups = new ArrayList( Arrays.asList( 3,8,9,1,2,5,4,6,7 ) );
+        //List<Integer> cups = new ArrayList( Arrays.asList( 6,8,5,9,7,4,2,1,3 ) );
+
+        Instant start = Instant.now();
+        for ( int i = 10; i <= 100; i++ ) {
+            cups.add( i );
+        }
+
+        int currentCup = 0;
+        for ( int i = 0; i < 100; i++ ) {
+            if ( i % 1000 == 0 ) { System.out.println( "  Playing round: " + (i+1) ); }
+            currentCup = playRound( currentCup, cups );
+        }
+
+        int idxOfOne = cups.indexOf( 1 );
+        int firstValIdx = idxOfOne + 1;
+        int firstVal = firstValIdx < cups.size() ? cups.get( firstValIdx ) : cups.get( firstValIdx - cups.size() );
+        int secondValIdx = idxOfOne + 2;
+        int secondVal = secondValIdx < cups.size() ? cups.get( secondValIdx ) : cups.get( secondValIdx - cups.size() );
+        long answer = firstVal * secondVal;
+
+        Instant end = Instant.now();
+        System.out.println("  [" + Duration.between(start, end) + "] WRONG Answer: " + answer );
+    }
+
     private int playRound( int currentCup, List<Integer> cups ) {
         // Get the current cup value
         int currentCupLbl = cups.get( currentCup );
