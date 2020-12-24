@@ -8,41 +8,45 @@ public class AdventDay20 {
 
     public void executePart1() {
         System.out.println("ADVENT DAY 20 - PART 1...");
-        List<String> lines = new AdventDay20Test().testLines();
-        //List<String> lines = new InputReader().readStringInput("data-files/day20-input.txt" );
+        //List<String> lines = new AdventDay20Test().testLines();
+        List<String> lines = new InputReader().readStringInput("data-files/day20-input.txt" );
 
         Instant start = Instant.now();
         List<Tile> tiles = parseTiles( lines );
         analyzeForTileMatches( tiles );
 
+        long answer = 1;
         for ( Tile tile : tiles ) {
-            System.out.println( "Tile " + tile.tileId + " matches: " + tile.matches );
+            if ( tile.matches.size() == 2 ) {
+                answer *= tile.tileId;
+            }
         }
 
-        tiles.get( 0 ).print( "Original " );
-        tiles.get( 0 ).rotateAndFlip( -1 );
-        tiles.get( 0 ).print( "Flipped " );
-        tiles.get( 0 ).rotateAndFlip( 1 );
-        tiles.get( 0 ).print( "Original " );
-
-        int answer = 0;
         Instant end = Instant.now();
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
     }
 
     private List<Tile> parseTiles( List<String> lines ) {
         List<Tile> tiles = new ArrayList<>();
-        List<String> workRows = new ArrayList<>();
+        List<String> workRows = null;
         int workTileId = 0;
         for ( String line : lines ) {
             if ( line.startsWith( "Tile" ) ) {
                 workRows = new ArrayList<>();
                 workTileId = Integer.parseInt( line.split( "Tile " )[1].split( ":" )[0] );
             } else if ( line.trim().isEmpty() ) {
-                tiles.add( new Tile( workTileId, workRows ) );
+                if ( workRows != null ) {
+                    tiles.add( new Tile( workTileId, workRows ) );
+                    workRows = null;
+                }
             } else {
-                workRows.add( line.trim() );
+                if ( workRows != null ) {
+                    workRows.add( line.trim() );
+                }
             }
+        }
+        if ( workRows != null ) {
+            tiles.add( new Tile( workTileId, workRows ) );
         }
         return tiles;
     }
