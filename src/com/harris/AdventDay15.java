@@ -14,7 +14,7 @@ public class AdventDay15 {
         //int[] inputVals = { 2,3,1 };
         //int[] inputVals = { 3,2,1 };
         //int[] inputVals = { 3,1,2 };
-        int[] inputVals = { 2,0,1,7,4,14,18 };
+        int[] inputVals = { 6,4,12,1,20,0,16 };
         int stopTurn = 2020;
 
         int lastNumberSpoken = determineLastNumberSpoken( inputVals, stopTurn );
@@ -30,7 +30,7 @@ public class AdventDay15 {
         //int[] inputVals = { 2,3,1 };
         //int[] inputVals = { 3,2,1 };
         //int[] inputVals = { 3,1,2 };
-        int[] inputVals = { 2,0,1,7,4,14,18 };
+        int[] inputVals = { 6,4,12,1,20,0,16 };
         int stopTurn = 30000000;
 
         int lastNumberSpoken = determineLastNumberSpoken( inputVals, stopTurn );

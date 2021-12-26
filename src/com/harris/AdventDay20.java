@@ -26,6 +26,36 @@ public class AdventDay20 {
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
     }
 
+    public void executePart2() {
+        System.out.println("ADVENT DAY 20 - PART 2...");
+        List<String> lines = new AdventDay20Test().testLines();
+        //List<String> lines = new InputReader().readStringInput("data-files/day20-input.txt" );
+
+        Instant start = Instant.now();
+        List<Tile> tiles = parseTiles( lines );
+        analyzeForTileMatches( tiles );
+        List<List<Tile>> image = arrangeTiles( tiles );
+
+        for ( List<Tile> imageRow : image ) {
+            for ( Tile imageCol : imageRow ) {
+                System.out.print( "..." );
+                System.out.print( imageCol == null ? "NULL" : imageCol.tileId );
+            }
+            System.out.println();
+        }
+
+        long answer = 1;
+        for ( Tile tile : tiles ) {
+            System.out.println( "Tile Id: " + tile.tileId + ", matches: " + tile.matches );
+            if ( tile.matches.size() == 2 ) {
+                answer *= tile.tileId;
+            }
+        }
+
+        Instant end = Instant.now();
+        System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
+    }
+
     private List<Tile> parseTiles( List<String> lines ) {
         List<Tile> tiles = new ArrayList<>();
         List<String> workRows = null;
@@ -73,6 +103,113 @@ public class AdventDay20 {
             matchB.tileSide = match.matchTileSide;
             matchB.matchTileSide = match.tileSide;
             tileB.matches.add( matchB );
+        }
+    }
+
+    private List<List<Tile>> arrangeTiles( List<Tile> tiles ) {
+        List<List<Tile>> image = new ArrayList<>();
+        for ( Tile tile : tiles ) {
+            placeTile( tile, image );
+            for ( TileMatch match : tile.matches ) {
+                for ( Tile matchTile : tiles ) {
+                    if ( match.matchedTileId == matchTile.tileId ) {
+                        placeTile( matchTile, image );
+                        break;
+                    }
+                }
+            }
+        }
+        return image;
+    }
+
+    private void placeTile( Tile tile, List<List<Tile>> image ) {
+        int rowIdx = -1;
+        int colIdx = -1;
+        if ( ! image.isEmpty() ) {
+            if ( findTileInImage( tile.tileId, image ) != null ) {
+                // Just return...tile already placed
+                return;
+            }
+
+            // Find the location of the first match
+            for ( TileMatch match : tile.matches ) {
+                int[] matchLoc = findTileInImage( match.matchedTileId, image );
+                if ( matchLoc != null ) {
+                    rowIdx = matchLoc[0];
+                    colIdx = matchLoc[1];
+
+                    if ( match.tileSide == 2 && match.matchTileSide == 4 ) {
+                        colIdx -= 1;
+                    } else if ( match.tileSide == 4 && match.matchTileSide == 2 ) {
+                        colIdx += 1;
+                    } else if ( match.tileSide == 1 && match.matchTileSide == 3 ) {
+                        rowIdx += 1;
+                    } else if ( match.tileSide == 3 && match.matchTileSide == 1 ) {
+                        rowIdx -= 1;
+                    } else {
+                        rowIdx = -1;
+                        colIdx = -1;
+                    }
+                    break;
+                }
+            }
+
+            if ( rowIdx == -1 && colIdx == -1 ) {
+                return;
+            }
+        }
+        addTileToImage(tile, image, rowIdx, colIdx);
+    }
+
+    private void addTileToImage( Tile tile, List<List<Tile>> image, int rowIdx, int colIdx ) {
+        List<Tile> row = null;
+        if ( rowIdx < 0 ) {
+            row = new ArrayList<>();
+            image.add( 0, row );
+        } else if ( rowIdx >= image.size() ) {
+            for ( int i = image.size(); i <= rowIdx; i++ ) {
+                row = new ArrayList<>();
+                image.add( row );
+            }
+        } else {
+            row = image.get( rowIdx );
+        }
+
+        if ( colIdx < 0 ) {
+            row.add( 0 , tile );
+        } else {
+            if ( colIdx >= row.size() ) {
+                for ( int i = row.size(); i <= colIdx; i++ ) {
+                    row.add(null);
+                }
+            }
+            row.set(colIdx, tile);
+        }
+    }
+
+    private int[] findTileInImage( int tileId, List<List<Tile>> image ) {
+        Integer rowIdx = null;
+        Integer colIdx = null;
+        int wrkRow = 0;
+        int wrkCol;
+        done:
+        for ( List<Tile> row : image ) {
+            wrkCol = 0;
+            for ( Tile col : row ) {
+                if ( col != null && tileId == col.tileId ) {
+                    rowIdx = wrkRow;
+                    colIdx = wrkCol;
+                    break done;
+                }
+                wrkCol++;
+            }
+            wrkRow++;
+        }
+
+        if ( rowIdx != null ) {
+            return new int[] { rowIdx, colIdx };
+        } else {
+            return null;
         }
     }
 
@@ -201,6 +338,14 @@ class Tile {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public int hashCode() {
+        return ((Integer) tileId).hashCode();
+    }
+
+    public boolean equals( Object o ) {
+        return (o instanceof Tile) && ((Integer) tileId).equals( ((Tile) o).tileId );
     }
 }
 

@@ -14,12 +14,12 @@ public class AdventDay3 {
     public void executePart2() {
         System.out.println( "ADVENT DAY 3 - PART 2..." );
         List<String> lines = new InputReader().readStringInput( "data-files/day3-input.txt" );
-        int treeCnt1 = countTrees( lines, 1, 1 );
-        int treeCnt2 = countTrees( lines, 3, 1 );
-        int treeCnt3 = countTrees( lines, 5, 1 );
-        int treeCnt4 = countTrees( lines, 7, 1 );
-        int treeCnt5 = countTrees( lines, 1, 2 );
-        int result = treeCnt1 * treeCnt2 * treeCnt3 * treeCnt4 * treeCnt5;
+        long treeCnt1 = countTrees( lines, 1, 1 );
+        long treeCnt2 = countTrees( lines, 3, 1 );
+        long treeCnt3 = countTrees( lines, 5, 1 );
+        long treeCnt4 = countTrees( lines, 7, 1 );
+        long treeCnt5 = countTrees( lines, 1, 2 );
+        long result = treeCnt1 * treeCnt2 * treeCnt3 * treeCnt4 * treeCnt5;
         System.out.println("  Trees encountered: " + result );
     }
 

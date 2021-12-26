@@ -11,7 +11,7 @@ public class AdventDay23 {
     public void executePart1() {
         System.out.println("ADVENT DAY 23 - PART 1...");
         //List<Integer> cups = new ArrayList( Arrays.asList( 3,8,9,1,2,5,4,6,7 ) );
-        List<Integer> cups = new ArrayList( Arrays.asList( 6,8,5,9,7,4,2,1,3 ) );
+        List<Integer> cups = new ArrayList( Arrays.asList( 8,7,1,3,6,9,4,5,2 ) );
 
         Instant start = Instant.now();
         int currentCup = 0;
@@ -35,7 +35,7 @@ public class AdventDay23 {
     public void executePart2() {
         System.out.println("ADVENT DAY 23 - PART 2...");
         List<Integer> cups = new ArrayList( Arrays.asList( 3,8,9,1,2,5,4,6,7 ) );
-        //List<Integer> cups = new ArrayList( Arrays.asList( 6,8,5,9,7,4,2,1,3 ) );
+        //List<Integer> cups = new ArrayList( Arrays.asList( 8,7,1,3,6,9,4,5,2 ) );
 
         Instant start = Instant.now();
         for ( int i = 10; i <= 100; i++ ) {

@@ -12,7 +12,7 @@ public class AdventDay25 {
     public void executePart1() {
         System.out.println("ADVENT DAY 25 - PART 1...");
         //List<Long> publicKeys = java.util.Arrays.asList( 5764801L, 17807724L );
-        List<Long> publicKeys = java.util.Arrays.asList( 10212254L, 12577395L );
+        List<Long> publicKeys = java.util.Arrays.asList( 16915772L, 18447943L );
 
         Instant start = Instant.now();
 
