@@ -27,7 +27,7 @@ public class AdventDay19 {
         Instant start = Instant.now();
         Map<Integer,RuleText> rules = new HashMap<>();
         int messageStartIdx = parseRules( rules, lines );
-        expandRules( rules, false );
+        expandRules( rules );
 
         //for ( RuleText rule : rules.values() ) {
         //    System.out.println( rule.ruleId +
@@ -99,13 +99,17 @@ public class AdventDay19 {
                 "aaaabbaabbaaaaaaabbbabbbaaabbaabaaa",
                 "babaaabbbaaabaababbaabababaaab",
                 "aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba"
-        );*/
+        );
+        lines.set(4, "11: 42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31 | 42 42 42 42 42 31 31 31 31 31 | 42 42 42 42 42 42 31 31 31 31 31 31");
+        lines.set(26, "8: 42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42 | 42 42 42 42 42 42 | 42 42 42 42 42 42 42");*/
         List<String> lines = new InputReader().readStringInput("data-files/day19-input.txt" );
+        lines.set(15, "11: 42 31 | 42 42 31 31 | 42 42 42 31 31 31 | 42 42 42 42 31 31 31 31 | 42 42 42 42 42 31 31 31 31 31 | 42 42 42 42 42 42 31 31 31 31 31 31");
+        lines.set(20, "8: 42 | 42 42 | 42 42 42 | 42 42 42 42 | 42 42 42 42 42 | 42 42 42 42 42 42 | 42 42 42 42 42 42 42");
 
         Instant start = Instant.now();
         Map<Integer,RuleText> rules = new HashMap<>();
         int messageStartIdx = parseRules( rules, lines );
-        expandRules( rules, true );
+        expandRules( rules );
 
         //for ( RuleText rule : rules.values() ) {
         //    System.out.println( rule.ruleId +
@@ -124,7 +128,7 @@ public class AdventDay19 {
             }
         }
         Instant end = Instant.now();
-        System.out.println( "  [" + Duration.between( start, end ) + "] WRONG Answer: " + answer );
+        System.out.println( "  [" + Duration.between( start, end ) + "] Answer: " + answer );
     }
 
     private int parseRules( Map<Integer,RuleText> rules, List<String> lines ) {
@@ -190,7 +194,7 @@ public class AdventDay19 {
         return messageStartIdx;
     }
 
-    private void expandRules( Map<Integer,RuleText> rules, boolean replaceRules ) {
+    private void expandRules( Map<Integer,RuleText> rules ) {
         boolean rulesToExpand = true;
         while ( rulesToExpand ) {
             rulesToExpand = false;
@@ -214,15 +218,6 @@ public class AdventDay19 {
                 }
             }
         }
-
-        if ( replaceRules ) {
-            RuleText rule31 = rules.get( 31 );
-            RuleText rule42 = rules.get( 42 );
-
-            RuleText rule0 = rules.get( 0 );
-            rule0.expandedRegex = "(" + rule42.expandedRegex + "){2,}(" + rule31.expandedRegex + "){1,}";
-        }
-
     }
 
 }
