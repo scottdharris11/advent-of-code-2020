@@ -28,30 +28,16 @@ public class AdventDay20 {
 
     public void executePart2() {
         System.out.println("ADVENT DAY 20 - PART 2...");
-        List<String> lines = new AdventDay20Test().testLines();
-        //List<String> lines = new InputReader().readStringInput("data-files/day20-input.txt" );
+        //List<String> lines = new AdventDay20Test().testLines();
+        List<String> lines = new InputReader().readStringInput("data-files/day20-input.txt" );
 
         Instant start = Instant.now();
         List<Tile> tiles = parseTiles( lines );
         analyzeForTileMatches( tiles );
-        List<List<Tile>> image = arrangeTiles( tiles );
+        Image image = new Image(arrangeTiles( tiles ));
+        //image.print();
 
-        for ( List<Tile> imageRow : image ) {
-            for ( Tile imageCol : imageRow ) {
-                System.out.print( "..." );
-                System.out.print( imageCol == null ? "NULL" : imageCol.tileId );
-            }
-            System.out.println();
-        }
-
-        long answer = 1;
-        for ( Tile tile : tiles ) {
-            System.out.println( "Tile Id: " + tile.tileId + ", matches: " + tile.matches );
-            if ( tile.matches.size() == 2 ) {
-                answer *= tile.tileId;
-            }
-        }
-
+        long answer = image.waves();
         Instant end = Instant.now();
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
     }
@@ -108,57 +94,164 @@ public class AdventDay20 {
 
     private List<List<Tile>> arrangeTiles( List<Tile> tiles ) {
         List<List<Tile>> image = new ArrayList<>();
+        Map<Integer,Tile> tilesById = new HashMap<>();
+        Tile initialCorner = null;
         for ( Tile tile : tiles ) {
-            placeTile( tile, image );
-            for ( TileMatch match : tile.matches ) {
-                for ( Tile matchTile : tiles ) {
-                    if ( match.matchedTileId == matchTile.tileId ) {
-                        placeTile( matchTile, image );
-                        break;
-                    }
-                }
+            if ( initialCorner == null && tile.matches.size() == 2 ) {
+                initialCorner = tile;
             }
+            tilesById.put(tile.tileId, tile);
         }
+        Set<Integer> placed = new HashSet<>();
+        tileToImage(image, initialCorner, 0, null, placed, tilesById);
         return image;
     }
 
-    private void placeTile( Tile tile, List<List<Tile>> image ) {
-        int rowIdx = -1;
-        int colIdx = -1;
-        if ( ! image.isEmpty() ) {
-            if ( findTileInImage( tile.tileId, image ) != null ) {
-                // Just return...tile already placed
-                return;
-            }
+    private static final Map<String,Integer[]> ROTATE_FLIPS = new HashMap<>();
+    static {
+        // keys represent the match tile sides
+        // values represent:
+        // - rotate times (always clockwise)
+        // - flip (-1 == vertical, 0 == none, 1 == horizontal)
+        ROTATE_FLIPS.put("1,1", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("1,-1", new Integer[]{2,0});
+        ROTATE_FLIPS.put("1,2", new Integer[]{1,1});
+        ROTATE_FLIPS.put("1,-2", new Integer[]{1,0});
+        ROTATE_FLIPS.put("1,3", new Integer[]{0,0});
+        ROTATE_FLIPS.put("1,-3", new Integer[]{0,1});
+        ROTATE_FLIPS.put("1,4", new Integer[]{3,0});
+        ROTATE_FLIPS.put("1,-4", new Integer[]{3,1});
 
-            // Find the location of the first match
-            for ( TileMatch match : tile.matches ) {
-                int[] matchLoc = findTileInImage( match.matchedTileId, image );
-                if ( matchLoc != null ) {
-                    rowIdx = matchLoc[0];
-                    colIdx = matchLoc[1];
+        ROTATE_FLIPS.put("-1,1", new Integer[]{2,0});
+        ROTATE_FLIPS.put("-1,-1", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("-1,2", new Integer[]{1,0});
+        ROTATE_FLIPS.put("-1,-2", new Integer[]{1,1});
+        ROTATE_FLIPS.put("-1,3", new Integer[]{0,1});
+        ROTATE_FLIPS.put("-1,-3", new Integer[]{0,0});
+        ROTATE_FLIPS.put("-1,4", new Integer[]{3,1});
+        ROTATE_FLIPS.put("-1,-4", new Integer[]{3,0});
 
-                    if ( match.tileSide == 2 && match.matchTileSide == 4 ) {
-                        colIdx -= 1;
-                    } else if ( match.tileSide == 4 && match.matchTileSide == 2 ) {
-                        colIdx += 1;
-                    } else if ( match.tileSide == 1 && match.matchTileSide == 3 ) {
-                        rowIdx += 1;
-                    } else if ( match.tileSide == 3 && match.matchTileSide == 1 ) {
-                        rowIdx -= 1;
-                    } else {
-                        rowIdx = -1;
-                        colIdx = -1;
-                    }
-                    break;
+        ROTATE_FLIPS.put("2,1", new Integer[]{3,-1});
+        ROTATE_FLIPS.put("2,-1", new Integer[]{3,0});
+        ROTATE_FLIPS.put("2,2", new Integer[]{0,1});
+        ROTATE_FLIPS.put("2,-2", new Integer[]{2,0});
+        ROTATE_FLIPS.put("2,3", new Integer[]{1,0});
+        ROTATE_FLIPS.put("2,-3", new Integer[]{1,-1});
+        ROTATE_FLIPS.put("2,4", new Integer[]{0,0});
+        ROTATE_FLIPS.put("2,-4", new Integer[]{0,-1});
+
+        ROTATE_FLIPS.put("-2,1", new Integer[]{3,0});
+        ROTATE_FLIPS.put("-2,-1", new Integer[]{3,-1});
+        ROTATE_FLIPS.put("-2,2", new Integer[]{2,0});
+        ROTATE_FLIPS.put("-2,-2", new Integer[]{0,1});
+        ROTATE_FLIPS.put("-2,3", new Integer[]{1,-1});
+        ROTATE_FLIPS.put("-2,-3", new Integer[]{1,0});
+        ROTATE_FLIPS.put("-2,4", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("-2,-4", new Integer[]{0,0});
+
+        ROTATE_FLIPS.put("3,1", new Integer[]{0,0});
+        ROTATE_FLIPS.put("3,-1", new Integer[]{0,1});
+        ROTATE_FLIPS.put("3,2", new Integer[]{3,0});
+        ROTATE_FLIPS.put("3,-2", new Integer[]{3,1});
+        ROTATE_FLIPS.put("3,3", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("3,-3", new Integer[]{2,0});
+        ROTATE_FLIPS.put("3,4", new Integer[]{1,1});
+        ROTATE_FLIPS.put("3,-4", new Integer[]{1,0});
+
+        ROTATE_FLIPS.put("-3,1", new Integer[]{0,1});
+        ROTATE_FLIPS.put("-3,-1", new Integer[]{0,0});
+        ROTATE_FLIPS.put("-3,2", new Integer[]{3,1});
+        ROTATE_FLIPS.put("-3,-2", new Integer[]{3,0});
+        ROTATE_FLIPS.put("-3,3", new Integer[]{2,0});
+        ROTATE_FLIPS.put("-3,-3", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("-3,4", new Integer[]{1,0});
+        ROTATE_FLIPS.put("-3,-4", new Integer[]{1,1});
+
+        ROTATE_FLIPS.put("4,1", new Integer[]{1,0});
+        ROTATE_FLIPS.put("4,-1", new Integer[]{1,-1});
+        ROTATE_FLIPS.put("4,2", new Integer[]{0,0});
+        ROTATE_FLIPS.put("4,-2", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("4,3", new Integer[]{3,-1});
+        ROTATE_FLIPS.put("4,-3", new Integer[]{3,0});
+        ROTATE_FLIPS.put("4,4", new Integer[]{0,1});
+        ROTATE_FLIPS.put("4,-4", new Integer[]{2,0});
+
+        ROTATE_FLIPS.put("-4,1", new Integer[]{1,-1});
+        ROTATE_FLIPS.put("-4,-1", new Integer[]{1,0});
+        ROTATE_FLIPS.put("-4,2", new Integer[]{0,-1});
+        ROTATE_FLIPS.put("-4,-2", new Integer[]{0,0});
+        ROTATE_FLIPS.put("-4,3", new Integer[]{3,0});
+        ROTATE_FLIPS.put("-4,-3", new Integer[]{3,-1});
+        ROTATE_FLIPS.put("-4,4", new Integer[]{2,0});
+        ROTATE_FLIPS.put("-4,-4", new Integer[]{0,1});
+    }
+
+    private Integer[] findTile(List<List<Tile>> image, int tileId) {
+        int tileRow = 0;
+        for (List<Tile> row : image) {
+            int tileCol = 0;
+            for (Tile tile : row) {
+                if (tile != null && tile.tileId == tileId) {
+                    return new Integer[]{tileRow, tileCol};
                 }
+                tileCol++;
             }
-
-            if ( rowIdx == -1 && colIdx == -1 ) {
-                return;
-            }
+            tileRow++;
         }
-        addTileToImage(tile, image, rowIdx, colIdx);
+        return null;
+    }
+
+    private void tileToImage( List<List<Tile>> image, Tile tile, int prevTileId, TileMatch match, Set<Integer> placed, Map<Integer,Tile> tiles ) {
+        // return if tile already placed
+        if ( placed.contains(tile.tileId) ){
+            return;
+        }
+        placed.add(tile.tileId);
+
+        // determine where to place the tile relative to the last tile placed
+        int row = 0;
+        int col = 0;
+        if ( match != null ) {
+            Integer[] coords = findTile(image, prevTileId);
+            row = coords[0];
+            col = coords[1];
+            //System.out.println("Prev Row/Col: " + row + "," + col + " (" + prevTileId + ") -> Match: " + match);
+            switch (match.tileSide) {
+                case 1:
+                case -1:
+                    row--;
+                    break;
+                case 2:
+                case -2:
+                    col++;
+                    break;
+                case 3:
+                case -3:
+                    row++;
+                    break;
+                case 4:
+                case -4:
+                    col--;
+                    break;
+            }
+            String key = match.tileSide + "," + match.matchTileSide;
+            Integer[] rotateFlip = ROTATE_FLIPS.get(key);
+            //System.out.println("Rotate/Flip: " + rotateFlip[0] + ", " + rotateFlip[1]);
+            tile.rotateAndFlip(rotateFlip[0], rotateFlip[1]);
+        }
+        addTileToImage(tile, image, row, col);
+        //printImage(image, tile.squares.length, tile.tileId);
+        if (row < 0) {
+            row = 0;
+        }
+        if (col < 0) {
+            col = 0;
+        }
+
+        // recurse to next tiles
+        for ( TileMatch next : tile.matches ) {
+            tileToImage(image, tiles.get(next.matchedTileId), tile.tileId, next, placed, tiles);
+        }
     }
 
     private void addTileToImage( Tile tile, List<List<Tile>> image, int rowIdx, int colIdx ) {
@@ -183,33 +276,34 @@ public class AdventDay20 {
                     row.add(null);
                 }
             }
+            if (row.get(colIdx) != null) {
+                System.out.println("Overlay occurring at row/col: " + rowIdx + "," + colIdx + " with tile " + tile.tileId);
+                System.exit(1);
+            }
             row.set(colIdx, tile);
         }
     }
 
-    private int[] findTileInImage( int tileId, List<List<Tile>> image ) {
-        Integer rowIdx = null;
-        Integer colIdx = null;
-        int wrkRow = 0;
-        int wrkCol;
-        done:
-        for ( List<Tile> row : image ) {
-            wrkCol = 0;
-            for ( Tile col : row ) {
-                if ( col != null && tileId == col.tileId ) {
-                    rowIdx = wrkRow;
-                    colIdx = wrkCol;
-                    break done;
+    void printImage(List<List<Tile>> tiles, int squaresPerTile, int tileId) {
+        for (List<Tile> row : tiles) {
+            for (int r = 0; r < squaresPerTile; r++) {
+                for (Tile tile : row) {
+                    for (int j = 0; j < squaresPerTile; j++) {
+                        if (tile == null) {
+                            System.out.print(" ");
+                        } else {
+                            if (tile.tileId == tileId && tile.squares[r][j] == '.') {
+                                System.out.print("*");
+                            } else {
+                                System.out.print(tile.squares[r][j]);
+                            }
+                        }
+                    }
+                    System.out.print(" ");
                 }
-                wrkCol++;
+                System.out.println();
             }
-            wrkRow++;
-        }
-
-        if ( rowIdx != null ) {
-            return new int[] { rowIdx, colIdx };
-        } else {
-            return null;
+            System.out.println();
         }
     }
 
@@ -218,7 +312,6 @@ public class AdventDay20 {
 class Tile {
     int tileId;
     char[][] squares;
-    int rotateFlipPoint = 1;
     Set<Integer> comparedTiles = new HashSet<>();
     List<TileMatch> matches = new ArrayList<>();
 
@@ -231,11 +324,9 @@ class Tile {
         }
     }
 
-    void rotateAndFlip( int toPoint ) {
+    void rotateAndFlip( int rotateTimes, int flip ) {
         // Rotate till reaching desired point
-        int toPointAbs = Math.abs( toPoint );
-        int currPointAbs = Math.abs( rotateFlipPoint );
-        while( currPointAbs != toPointAbs ) {
+        for (int r = 0; r < rotateTimes; r++) {
             char[][] rotateSquares = new char[squares.length][squares.length];
             for ( int i = 0, x = squares.length - 1; i < squares.length; i++, x-- ) {
                 for ( int j = 0; j < squares[i].length; j++ ) {
@@ -243,15 +334,31 @@ class Tile {
                 }
             }
             squares = rotateSquares;
-
-            currPointAbs++;
-            if ( currPointAbs > 3 ) {
-                currPointAbs = 0;
+        }
+        for (TileMatch m : matches) {
+            int s = Math.abs(m.tileSide);
+            s += rotateTimes;
+            if (s > 4) {
+                s -= 4;
             }
+            if (m.tileSide >= -2 && m.tileSide <= 2 && s > 2) {
+                if (m.tileSide > 0) {
+                    s *= -1;
+                }
+            } else if ((m.tileSide < -2 || m.tileSide > 2) && s < 3) {
+                if (m.tileSide > 0) {
+                    s *= -1;
+                }
+            } else {
+                if (m.tileSide < 0) {
+                    s *= -1;
+                }
+            }
+            m.tileSide = s;
         }
 
-        // Flip if necessary
-        if ( ( rotateFlipPoint < 0 && toPoint > 0 ) || ( rotateFlipPoint > 0 && toPoint < 0 ) ) {
+        if (flip == 1) {
+            // Flip horizontal
             char[][] flippedSquares = new char[squares.length][squares.length];
             for ( int i = 0; i < squares.length; i++ ) {
                 for ( int j = 0, x = squares.length - 1; j < squares[i].length; j++, x-- ) {
@@ -259,20 +366,57 @@ class Tile {
                 }
             }
             squares = flippedSquares;
+            for (TileMatch m : matches) {
+                if (m.tileSide % 2 == 0) {
+                    int s = Math.abs(m.tileSide);
+                    s += 2;
+                    if (s > 4) {
+                        s -= 4;
+                    }
+                    if (m.tileSide < 0) {
+                        s *= -1;
+                    }
+                    m.tileSide = s;
+                } else {
+                    m.tileSide *= -1;
+                }
+            }
+        } else if (flip == -1) {
+            // Flip vertical
+            char[][] flippedSquares = new char[squares.length][squares.length];
+            for ( int i = 0, x = squares.length - 1; i < squares.length; i++, x-- ) {
+                for ( int j = 0; j < squares[i].length; j++ ) {
+                    flippedSquares[i][j] = squares[x][j];
+                }
+            }
+            squares = flippedSquares;
+            for (TileMatch m : matches) {
+                if (m.tileSide % 2 == 0) {
+                    m.tileSide *= -1;
+                } else {
+                    int s = Math.abs(m.tileSide);
+                    s += 2;
+                    if (s > 4) {
+                        s -= 4;
+                    }
+                    if (m.tileSide < 0) {
+                        s *= -1;
+                    }
+                    m.tileSide = s;
+                }
+            }
         }
-
-        rotateFlipPoint = toPoint;
     }
 
     List<TileMatch> matchSides( Tile tile ) {
-        // 0,0...0,<LEN>         - Side 1
-        // 0,<LEN>...<LEN>,<LEN> - Side 2
-        // <LEN>,0...<LEN>,<LEN> - Side 3
-        // 0,0...<LEN>,0         - Side 4
-        // 0,<LEN>...0,0         - Side 1 FLIPPED
-        // <LEN>,<LEN>...0,<LEN> - Side 2 FLIPPED
-        // <LEN>,<LEN>...<LEN>,0 - Side 3 FLIPPED
-        // <LEN>,0...0,0         - Side 4 FLIPPED
+        // 0,0...0,<LEN>         - Side 1 (top from left)
+        // 0,<LEN>...<LEN>,<LEN> - Side 2 (right from top)
+        // <LEN>,0...<LEN>,<LEN> - Side 3 (bottom from left)
+        // 0,0...<LEN>,0         - Side 4 (left from top)
+        // 0,<LEN>...0,0         - Side 1 FLIPPED (top from right)
+        // <LEN>,<LEN>...0,<LEN> - Side 2 FLIPPED (right from bottom)
+        // <LEN>,<LEN>...<LEN>,0 - Side 3 FLIPPED (bottom from right)
+        // <LEN>,0...0,0         - Side 4 FLIPPED (left from bottom)
         int len = squares.length;
         int[][] combos = {
                 {0,0,0,1,1}, {0,len-1,1,0,2}, {len-1,0,0,1,3}, {0,0,1,0,4},
@@ -329,17 +473,6 @@ class Tile {
         return matches;
     }
 
-    void print( String prefix ) {
-        System.out.println( prefix + "Tile: " + tileId );
-        for ( char[] row : squares ) {
-            for ( char col : row ) {
-                System.out.print( col );
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
-
     public int hashCode() {
         return ((Integer) tileId).hashCode();
     }
@@ -355,6 +488,102 @@ class TileMatch {
     int matchTileSide;
     public String toString() {
         return matchedTileId + "." + matchTileSide + "->" + tileSide;
+    }
+}
+
+class Image {
+    Integer[][][] monsterPatterns = new Integer[][][] {
+            {{0,0},{1,1},{4,1},{5,0},{6,0},{7,1},{10,1},{11,0},{12,0},{13,1},{16,1},{17,0},{18,0},{18,-1},{19,0}},
+            {{0,0},{1,-1},{4,-1},{5,0},{6,0},{7,-1},{10,-1},{11,0},{12,0},{13,-1},{16,-1},{17,0},{18,0},{18,1},{19,0}},
+            {{0,0},{-1,1},{-4,1},{-5,0},{-6,0},{-7,1},{-10,1},{-11,0},{-12,0},{-13,1},{-16,1},{-17,0},{-18,0},{-18,-1},{-19,0}},
+            {{0,0},{-1,-1},{-4,-1},{-5,0},{-6,0},{-7,-1},{-10,-1},{-11,0},{-12,0},{-13,-1},{-16,-1},{-17,0},{-18,0},{-18,1},{-19,0}},
+    };
+    char[][] pixels;
+    int waves;
+    Image(List<List<Tile>> tiles) {
+        int pixelsPerTile = tiles.get(0).get(0).squares.length-2;
+        int len = tiles.size() * pixelsPerTile;
+        this.pixels = new char[len][len];
+        int yBegin = 0;
+        for (List<Tile> row : tiles) {
+            int xBegin = 0;
+            for (Tile tile : row) {
+                int yOffset = yBegin;
+                for (int i = 1; i < tile.squares.length-1; i++) {
+                    int xOffset = xBegin;
+                    for (int j = 1; j < tile.squares.length-1; j++) {
+                        this.pixels[yOffset][xOffset] = tile.squares[i][j];
+                        if (tile.squares[i][j] == '#') {
+                            this.waves++;
+                        }
+                        xOffset++;
+                    }
+                    yOffset++;
+                }
+                xBegin += pixelsPerTile;
+            }
+            yBegin += pixelsPerTile;
+        }
+    }
+
+    void print() {
+        for ( char[] row : pixels ) {
+            for ( char col : row ) {
+                System.out.print( col );
+            }
+            System.out.println();
+        }
+    }
+
+    int waves() {
+        int monsters = 0;
+        int len = pixels.length;
+        for (int y = 0; y < len; y++) {
+            for (int x = 0; x < len; x++) {
+                if (isSeaMonster(x, y)) {
+                    //System.out.println("Monster at " + x + "," + y);
+                    monsters++;
+                }
+            }
+        }
+        return waves - (monsters * monsterPatterns[0].length);
+    }
+
+    boolean isSeaMonster(int x, int y) {
+        // check x/y patterns
+        int isize = pixels.length;
+        for (int m = 0; m < monsterPatterns.length; m++) {
+            boolean monster = true;
+            for (int p = 0; p < monsterPatterns[m].length; p++) {
+                int ix = x + monsterPatterns[m][p][0];
+                int iy = y + monsterPatterns[m][p][1];
+                if (ix < 0 || iy < 0 || ix >= isize || iy >= isize || pixels[iy][ix] != '#') {
+                    monster = false;
+                    break;
+                }
+            }
+            if (monster) {
+                return true;
+            }
+        }
+
+        // check y/x patterns
+        for (int m = 0; m < monsterPatterns.length; m++) {
+            boolean monster = true;
+            for (int p = 0; p < monsterPatterns[m].length; p++) {
+                int iy = y + monsterPatterns[m][p][0];
+                int ix = x + monsterPatterns[m][p][1];
+                if (ix < 0 || iy < 0 || ix >= isize || iy >= isize || pixels[iy][ix] != '#') {
+                    monster = false;
+                    break;
+                }
+            }
+            if (monster) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
