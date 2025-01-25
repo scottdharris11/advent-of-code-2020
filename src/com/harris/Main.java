@@ -47,7 +47,7 @@ public class Main {
         new AdventDay22().executePart1();
         new AdventDay22().executePart2();
         new AdventDay23().executePart1();
-        //new AdventDay23().executePart2();
+        new AdventDay23().executePart2();
         new AdventDay24().executePart1();
         new AdventDay24().executePart2();
         new AdventDay25().executePart1();

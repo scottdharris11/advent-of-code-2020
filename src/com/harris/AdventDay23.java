@@ -33,11 +33,18 @@ public class AdventDay23 {
     public void executePart2() {
         System.out.println("ADVENT DAY 23 - PART 2...");
         //int[] labels = new int[]{ 3,8,9,1,2,5,4,6,7 };
-        //int[] labels = new int[]{ 8,7,1,3,6,9,4,5,2 };
+        int[] labels = new int[]{ 8,7,1,3,6,9,4,5,2 };
 
         Instant start = Instant.now();
 
-        long answer = 0;
+        CrabCups game = new CrabCups(labels, 1000000);
+        Cup current = game.getCup(labels[0]);
+        for ( int i = 0; i < 10000000; i++ ) {
+            current = game.playRound(current);
+        }
+
+        current = game.getCup(1).next;
+        long answer = (long)current.label * (long)current.next.label;
 
         Instant end = Instant.now();
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer );
