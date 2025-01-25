@@ -3,6 +3,7 @@ package com.harris;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class AdventDay21 {
 
@@ -28,6 +29,40 @@ public class AdventDay21 {
             }
         }
 
+        Instant end = Instant.now();
+        System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
+    }
+
+    public void executePart2() {
+        System.out.println("ADVENT DAY 21 - PART 2...");
+        /*List<String> lines = java.util.Arrays.asList(
+                "mxmxvkd kfcds sqjhc nhms (contains dairy, fish)",
+                "trh fvjkl sbzzf mxmxvkd (contains dairy)",
+                "sqjhc fvjkl (contains soy)",
+                "sqjhc mxmxvkd sbzzf (contains fish)"
+        );*/
+        List<String> lines = new InputReader().readStringInput("data-files/day21-input.txt" );
+        Instant start = Instant.now();
+        Map<String,Allergen> allergens = new HashMap<>();
+        Map<String,Ingredient> ingredients = new HashMap<>();
+        parseIngredients( lines, ingredients, allergens );
+
+        //System.out.println("Allergens: " + allergens);
+        Set<String> isolated = new HashSet<>();
+        while ( true ) {
+            if ( !isolateAllergen(allergens, isolated)) {
+                break;
+            }
+        }
+        //System.out.println("Allergens: " + allergens);
+
+        List<String> keys = allergens.keySet().stream().sorted().collect(Collectors.toList());
+        Collections.sort(keys);
+        List<String> out = new ArrayList<>();
+        for ( String key : keys ) {
+            out.add(allergens.get(key).possibleIngredients.stream().findFirst().get());
+        }
+        String answer = String.join(",", out);
         Instant end = Instant.now();
         System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
     }
@@ -99,15 +134,47 @@ public class AdventDay21 {
         }
     }
 
+    private boolean isolateAllergen(Map<String,Allergen> allergens, Set<String> isolated) {
+        String isolatedIng = "";
+        String isolatedAlg = "";
+        for (Allergen a : allergens.values()) {
+            if (isolated.contains(a.name)) {
+                continue;
+            }
+            if (a.possibleIngredients.size() == 1) {
+                isolatedIng = a.possibleIngredients.stream().findFirst().get();
+                isolatedAlg = a.name;
+                break;
+            }
+        }
+        if (isolatedIng.equals("")) {
+            return false;
+        }
+        isolated.add(isolatedAlg);
+        for (Allergen a : allergens.values()) {
+            if (isolated.contains(a.name)) {
+                continue;
+            }
+            a.possibleIngredients.remove(isolatedIng);
+        }
+        return true;
+    }
+
 }
 
 class Ingredient {
     String name;
     int dishesUsed;
     Set<String> possibleAllergens = new HashSet<>();
+    public String toString() {
+        return name + "(" + dishesUsed + "): " + possibleAllergens;
+    }
 }
 
 class Allergen {
     String name;
     Set<String> possibleIngredients = new HashSet<>();
+    public String toString() {
+        return name + ": " + possibleIngredients;
+    }
 }
