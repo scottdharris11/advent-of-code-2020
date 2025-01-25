@@ -52,8 +52,8 @@ public class AdventDay22 {
                 "4",
                 "7",
                 "10"
-        );*/
-        /*List<String> lines = java.util.Arrays.asList(
+        );
+        List<String> lines = java.util.Arrays.asList(
                 "Player 1:",
                 "43",
                 "19",
@@ -67,14 +67,13 @@ public class AdventDay22 {
 
         Instant start = Instant.now();
 
-
         List<Queue<Integer>> playerDecks = parseDecks( lines );
         int winnerIdx = playGameRecursive( playerDecks );
         Queue<Integer> winnerDeck = playerDecks.get( winnerIdx );
         long answer = buildDeckValue( winnerDeck );
 
         Instant end = Instant.now();
-        System.out.println("  [" + Duration.between(start, end) + "] WRONG Answer: " + answer);
+        System.out.println("  [" + Duration.between(start, end) + "] Answer: " + answer);
     }
 
     private int playGame( List<Queue<Integer>> playerDecks ) {
@@ -115,20 +114,22 @@ public class AdventDay22 {
     private int playGameRecursive( List<Queue<Integer>> playerDecks ) {
         boolean gameOn = true;
         int roundWinnerIdx = Integer.MIN_VALUE;
-        Set<Long> prevRoundsVals = new HashSet<>();
+        Set<String> prevRoundsVals = new HashSet<>();
         while ( gameOn ) {
             // Before either player deals a card, if there was a previous round
             // in this game that had exactly the same cards in the same order
             // in the same players' decks, the game instantly ends in a win for player 1.
-            long roundVal = 0;
-            for ( int i = 1; i <= playerDecks.size(); i++ ) {
-                roundVal += ( buildDeckValue( playerDecks.get( i-1) ) * i );
+            StringBuilder sb = new StringBuilder();
+            for ( Queue<Integer> deck : playerDecks ) {
+                sb.append(deckState(deck));
+                sb.append("-");
             }
-            if ( prevRoundsVals.contains( roundVal ) ) {
+            String roundState = sb.toString();
+            if ( prevRoundsVals.contains( roundState ) ) {
                 roundWinnerIdx = 0;
                 break;
             } else {
-                prevRoundsVals.add( roundVal );
+                prevRoundsVals.add( roundState );
             }
 
             // Otherwise, this round's cards must be in a new configuration;
@@ -183,6 +184,16 @@ public class AdventDay22 {
             }
         }
         return roundWinnerIdx;
+    }
+
+    private String deckState( Queue<Integer> deck ) {
+        List<Integer> cards = new ArrayList<>( deck );
+        StringBuilder state = new StringBuilder();
+        for ( Integer card : cards ) {
+            state.append(card.toString());
+            state.append(",");
+        }
+        return state.toString();
     }
 
     private long buildDeckValue( Queue<Integer> deck ) {
